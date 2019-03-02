@@ -1,0 +1,18 @@
+backend:
+        image: flask
+        container_name: backend
+        volumes: 
+                - ./backend:/app
+        ports:
+                - "5000:5000"
+        
+frontend:
+        image: react
+        container_name: frontend
+        links:
+                - backend:backend
+        volumes: 
+                - ./frontend:/app
+        ports:
+                - "3000:3000"
+        
