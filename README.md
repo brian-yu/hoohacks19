@@ -1,6 +1,3 @@
 # Getting up and running
-- `cd backend`
-- `docker build -t flask:latest .`
-- `cd ../frontend`
-- `docker build -t react:latest .`
+- `./setup.sh`
 - `docker-compose up`
