@@ -4,7 +4,7 @@ backend:
         volumes: 
                 - ./backend:/app
         ports:
-                - "5000:5000"
+                - "3001:5000"
         
 frontend:
         image: react
