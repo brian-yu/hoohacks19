@@ -116,8 +116,9 @@ def entities():
 
 @app.route("/graph")
 def get_graph():
-    results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
-    return str(results)
+    # results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
+    # return str(results)
+    pass
 
 @app.route("/api/documents/new", methods=['POST'])
 def add_document():
@@ -137,6 +138,45 @@ def add_document():
         return "Success"
     except Exception as e:
         return str(e)
+
+@app.route("/flush")
+def flush_db():
+    try:
+        query = "MATCH (n) DETACH DELETE n"
+        results = graph.run(query)
+        return "Flushed data"
+    except Exception as e:
+        return str(e)
+
+@app.route("/load")
+def load_db():
+    try:
+        query = """
+                CREATE (note1:Note {text:'lmfao no u', link:"facebook.com", author:"Brian Yu"})
+                CREATE (note2:Note {text:'lmfao no me', link:"facebook.com", author:"Brian Yu"})
+                CREATE (note3:Note {text:'lmfao no 2', link:"facebook.com", author:"Rashid Lasker"})
+                CREATE (note4:Note {text:'lmfao no 3', link:"facebook.com", author:"Aaron Gu"})
+                CREATE (note5:Note {text:'lmfao no 4', link:"facebook.com", author:"Joanna Zhao"})
+
+                CREATE (no:Keyword {word:"no"})
+                CREATE (u:Keyword {word:"u"})
+                CREATE (me:Keyword {word:"me"})
+
+                CREATE
+                  (note1)-[:CONTAINS {salience:200}]->(no),
+                  (note2)-[:CONTAINS {salience:2040}]->(no),
+                  (note3)-[:CONTAINS {salience:4}]->(me),
+                  (note3)-[:CONTAINS {salience:2}]->(no),
+                  (note4)-[:CONTAINS {salience:2020}]->(no),
+                  (note1)-[:CONTAINS {salience:200}]->(u),
+                  (note5)-[:CONTAINS {salience:200}]->(me),
+                  (note2)-[:CONTAINS {salience:3}]->(u)
+                """
+        results = graph.run(query)
+        return "Loaded data"
+    except Exception as e:
+        return str(e)
+
  
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
