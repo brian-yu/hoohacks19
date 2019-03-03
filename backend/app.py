@@ -10,7 +10,7 @@ from google.cloud import storage
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
-from py2neo import Graph
+from py2neo import Graph, Node, Relationship
 
 # ================== FUNCTIONS ===========================
 
@@ -116,6 +116,25 @@ def entities():
 def get_graph():
     results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
     return str(results)
+
+@app.route("/api/documents/new", methods=['POST'])
+def add_document():
+    try:
+        content = request.get_json()
+        text = content['text']
+        link = content['link']
+        author = content['author']
+        a = Node("Note", text=text, link=link, author=author)
+        for item in content['keywords']:
+            word = item['word']
+            salience = str(item['salience'])
+            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\"})"
+            query += "MERGE (m:Keyword {word:\""+word+"\"})"
+            query += "MERGE (n)-[:CONTAINS {salience:\""+salience+"\"}]->(m)"
+            results = graph.run(query)
+        return "Success"
+    except Exception as e:
+        return str(e)
  
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
