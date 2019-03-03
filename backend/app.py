@@ -31,11 +31,13 @@ def extract_text_from_url(url):
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route('/')
 def hello_whale():
     return 'Hey guys!'
 
+@app.route('/camera')
+def camera():
+    pass
 
 @app.route('/upload')
 def upload():
