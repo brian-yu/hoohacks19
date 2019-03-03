@@ -57,27 +57,11 @@ function downloadImageFileFomBlob (blob, imageNumber) {
   anchor.dispatchEvent(mouseEvent);
 }
 
-function downloadImageFile (dataUri, imageNumber) {
-  let blob = dataURItoBlob(dataUri);
-  downloadImageFileFomBlob(blob, imageNumber);
-}
-
-
 class App extends Component {
-  constructor(){
-    super();
-    this.imageNumber = 0;
-  }
 
   onTakePhoto(dataUri){
-    // dataUri
-
-    //downloadImageFile(dataUri, this.imageNumber);
-    let blob = dataURItoBlob(dataUri);
-    var reader = new FileReader();
-    reader.readAsDataURL(blob);
-    var data = reader.result;
-    data = data.split(",").pop();
+    // dataUri is the string of the image
+    let blob = dataURItoBlob(dataUri); // the blob contains the image representation
 
     var oReq = new XMLHttpRequest();
     oReq.open("POST", "http://localhost:3001/upload", true);
@@ -85,36 +69,11 @@ class App extends Component {
       console.log(oEvent);
     };
 
-    //var blob = new Blob(['abc123'], {type: 'text/plain'});
-
     oReq.send(blob);
-    // fetch('http://localhost:3001/upload', {
-    //   method: 'POST',
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify(data)
-    // }).then(function(response){
-    //   console.log(response.body);
-    //   return response.text();
-    // }).then(function(text){
-    //   console.log(text);
-    // });
-
-    // fetch('http://localhost:3001/')
-    // .then(function(response) {
-    //   console.log(response.body);
-    //   return response.text();
-    // })
-    // .then(function(text) {
-    //   console.log(text);
-    // });
-
-    this.imageNumber += 1;
     console.log("took photo");
   }
   
   render() {
-
-
     return (
       <div className="App">
         <Camera 
@@ -122,22 +81,6 @@ class App extends Component {
           imageType={IMAGE_TYPES.PNG}
         />
       </div>
-      // <div className="App">
-      //   <header className="App-header">
-      //     <img src={logo} className="App-logo" alt="logo" />
-      //     <p>
-      //       Edit <code>src/App.js</code> and save to reload.
-      //     </p>
-      //     <a
-      //       className="App-link"
-      //       href="https://reactjs.org"
-      //       target="_blank"
-      //       rel="noopener noreferrer"
-      //     >
-      //       Learn React
-      //     </a>
-      //   </header>
-      // </div>
     );
   }
 }
