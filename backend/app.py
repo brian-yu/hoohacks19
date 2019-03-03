@@ -1,11 +1,14 @@
 from flask import Flask
 import requests
+from flask_cors import CORS
 import base64
 import json
 import os
 
 
 app = Flask(__name__)
+CORS(app)
+
  
  
 @app.route('/')
