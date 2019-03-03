@@ -5,6 +5,7 @@ import base64
 import json
 import os
 import uuid
+import random
 from google.cloud import vision
 from google.cloud import storage
 from google.cloud import language
@@ -71,6 +72,23 @@ def upload_blob(source_file_name, fid):
 
     blob.upload_from_filename(source_file_name)
 
+def add_document_helper(content):
+    try:
+        text = content['text']
+        link = content['link']
+        author = content['author']
+        a = Node("Note", text=text, link=link, author=author)
+        for item in content['keywords']:
+            name = item['name']
+            salience = str(item['salience'])
+            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\"})"
+            query += "MERGE (m:Keyword {name:\""+name+"\"})"
+            query += "MERGE (n)-[:CONTAINS {salience:\""+salience+"\"}]->(m)"
+            results = graph.run(query)
+        return "Success"
+    except Exception as e:
+        return str(e)
+
 # ================== FLASK APP + ROUTES ==================
 
 app = Flask(__name__)
@@ -99,7 +117,14 @@ def upload():
         text = extract_text_from_url(url)
         print(text)
         entities = extract_entities_from_text(text)
-        
+        authors = ["Brian Yu", "Rashid Lasker", "Joanna Zhao", "Aaron Gu"]
+        content = {
+            "text": text,
+            "link": url,
+            "author": random.choice(authors),
+            "keywords": entities
+        }
+        add_document_helper(content)
         return text
     else:
         return 'get'
@@ -122,19 +147,9 @@ def get_graph():
 
 @app.route("/api/documents/new", methods=['POST'])
 def add_document():
+    content = request.get_json()
     try:
-        content = request.get_json()
-        text = content['text']
-        link = content['link']
-        author = content['author']
-        a = Node("Note", text=text, link=link, author=author)
-        for item in content['keywords']:
-            word = item['word']
-            salience = str(item['salience'])
-            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\"})"
-            query += "MERGE (m:Keyword {word:\""+word+"\"})"
-            query += "MERGE (n)-[:CONTAINS {salience:\""+salience+"\"}]->(m)"
-            results = graph.run(query)
+        add_document_helper(content)
         return "Success"
     except Exception as e:
         return str(e)
@@ -159,9 +174,9 @@ def load_db():
                 CREATE (note4:Note {text:'lmfao no 3', link:"facebook.com", author:"Aaron Gu"})
                 CREATE (note5:Note {text:'lmfao no 4', link:"facebook.com", author:"Joanna Zhao"})
 
-                CREATE (no:Keyword {word:"no"})
-                CREATE (u:Keyword {word:"u"})
-                CREATE (me:Keyword {word:"me"})
+                CREATE (no:Keyword {name:"no"})
+                CREATE (u:Keyword {name:"u"})
+                CREATE (me:Keyword {name:"me"})
 
                 CREATE
                   (note1)-[:CONTAINS {salience:200}]->(no),
