@@ -46,7 +46,7 @@ class Grid extends Component {
                 {this.state.gridResults.map((res, idx) =>
                     <div className="item" key={idx}>
                         <a href={res.link}>
-                          <img className="gridImg" src={res.link} alt={res.text}/>
+                          <img title={res.text} className="gridImg" src={res.link} alt={res.text}/>
                           <h3>{res.author}</h3>
                         </a>
                     </div>
