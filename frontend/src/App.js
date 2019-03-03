@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Graph from './Graph/Graph.js';
+import Grid from './Grid/Grid.js';
 import MobileView from './MobileView/MobileView.js';
 import { Button, Navbar, Nav, Form, FormControl, ButtonToolbar, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
@@ -17,8 +18,8 @@ class App extends Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <NavLink to="/" activeClassName="nav-selected">Home</NavLink>
-              <NavLink to="/upload/" activeClassName="nav-selected">Graph View</NavLink>
-              <NavLink to="/grid/" activeClassName="nav-selected">Grid View</NavLink>
+              <NavLink to="/upload/" activeClassName="nav-selected">Scan</NavLink>
+              <NavLink to="/grid/" activeClassName="nav-selected">Grid</NavLink>
 
               <Nav className="mr-auto">
               </Nav>

@@ -4,8 +4,6 @@ import NeoVis from 'neoviz.js';
 
 class Graph extends Component {
 
-
-
   draw() {
     var viz;
     var config = {
@@ -30,8 +28,8 @@ class Graph extends Component {
         // initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
     };
 
-    viz = new NeoVis.default(config);
-    viz.render();
+    // viz = new NeoVis.default(config);
+    // viz.render();
   }
 
   componentDidMount(){

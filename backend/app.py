@@ -11,7 +11,7 @@ from google.cloud import storage
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node, Relationship, NodeMatcher
 
 # ================== FUNCTIONS ===========================
 
@@ -24,6 +24,7 @@ bucket_id = 'hoohacks-images'
 bucket = storage_client.get_bucket(bucket_id)
 
 graph = Graph("bolt://db-api:7687", auth=("neo4j","reinform"))
+matcher = NodeMatcher(graph)
 
 def extract_text_from_url(url):
     print(url)
@@ -95,6 +96,16 @@ def add_document_helper(content):
     except Exception as e:
         return str(e)
 
+def get_documents():
+    return json.dumps(list(matcher.match("Note").limit(20)))
+
+def search_documents(query):
+    query.lower()
+    lowerMatches = list(matcher.match("Note", text__contains=query))
+    query.title()
+    matches = lowerMatches + list(matcher.match("Note", text__contains=query))
+    return json.dumps(matches)
+
 # ================== FLASK APP + ROUTES ==================
 
 app = Flask(__name__)
@@ -154,6 +165,14 @@ def get_graph():
     # results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
     # return str(results)
     pass
+
+@app.route("/documents")
+def documents():
+    return get_documents()
+
+@app.route("/search/<query>")
+def search(query):
+    return search_documents(query)
 
 @app.route("/i/documents/new", methods=['POST'])
 def add_document():
