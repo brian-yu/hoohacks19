@@ -95,6 +95,9 @@ def add_document_helper(content):
     except Exception as e:
         return str(e)
 
+def get_documents():
+    pass
+
 # ================== FLASK APP + ROUTES ==================
 
 app = Flask(__name__)
