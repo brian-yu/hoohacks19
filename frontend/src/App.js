@@ -3,6 +3,7 @@ import Camera, {
   IMAGE_TYPES,
   FACING_MODES
 } from 'react-html5-camera-photo';
+import {BeatLoader} from 'react-spinners';
 
 //import logo from './logo.svg';
 import './App.css';
@@ -61,19 +62,29 @@ function downloadImageFileFomBlob (blob, imageNumber) {
 }
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {extracting: false}
+  }
 
   onTakePhoto(dataUri){
     // dataUri is the string of the image
+    this.state.extracting = true;
     let blob = dataURItoBlob(dataUri); // the blob contains the image representation
 
     var oReq = new XMLHttpRequest();
     oReq.open("POST", "https://multum.serveo.net/upload", true);
     oReq.onload = function (oEvent) {
       console.log(oEvent);
+      if (oReq.readyState === oReq.DONE) {
+        if (oReq.status === 200) {
+            console.log(oReq.response);
+        }
+      }
     };
-
     oReq.send(blob);
     console.log("took photo");
+    this.state.extracting = false;
   }
   
   render() {
@@ -85,7 +96,13 @@ class App extends Component {
           idealFacingMode={FACING_MODES.ENVIRONMENT}
           isImageMirror={false}
         />
+        <BeatLoader
+          sizeUnit={"px"}
+          size={150}
+          loading={this.state.extracting}
+        />
       </div>
+    
     );
   }
 }
