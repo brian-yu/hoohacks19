@@ -1,0 +1,20 @@
+.grid {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	flex-wrap: wrap;
+	text-align: center;
+	justify-content: space-around;
+	padding-top: 30px;
+
+	item {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+}
+
+.gridImg {
+	max-width: 300px;
+	max-height: 300px;
+}
