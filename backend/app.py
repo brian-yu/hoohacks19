@@ -112,7 +112,7 @@ app = Flask(__name__)
 CORS(app)
 logging.getLogger('flask_cors').level = logging.DEBUG
 
-@app.route('/')
+@app.route('/api')
 def hello_whale():
     return "Hey guys!"
 
