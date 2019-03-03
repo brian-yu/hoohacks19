@@ -24,68 +24,51 @@ function dataURItoBlob (dataURI) {
   return blob;
 }
 
-function padWithZeroNumber (number, width) {
-  number = number + '';
-  return number.length >= width
-    ? number
-    : new Array(width - number.length + 1).join('0') + number;
-}
-
-function getFileExtention (blobType) {
-  // by default the extention is .png
-  let extention = IMAGE_TYPES.PNG;
-
-  if (blobType === 'image/jpeg') {
-    extention = IMAGE_TYPES.JPG;
-  }
-  return extention;
-}
-
-function getFileName (imageNumber, blobType) {
-  const prefix = 'photo';
-  const photoNumber = padWithZeroNumber(imageNumber, 4);
-  const extention = getFileExtention(blobType);
-
-  return `${prefix}-${photoNumber}.${extention}`;
-}
-
-function downloadImageFileFomBlob (blob, imageNumber) {
-  window.URL = window.webkitURL || window.URL;
-
-  let anchor = document.createElement('a');
-  anchor.download = getFileName(imageNumber, blob.type);
-  anchor.href = window.URL.createObjectURL(blob);
-  let mouseEvent = document.createEvent('MouseEvents');
-  mouseEvent.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-  anchor.dispatchEvent(mouseEvent);
-}
-
 class MobileView extends Component {
   constructor(props){
     super(props);
-    this.state = {extracting: false}
+    this.state = {
+      extracting: false,
+      showResult: false,
+      textResult: "",
+    }
   }
 
   onTakePhoto(dataUri){
     // dataUri is the string of the image
-    this.state.extracting = true;
+    this.setState({extracting: true});
     let blob = dataURItoBlob(dataUri); // the blob contains the image representation
 
     var oReq = new XMLHttpRequest();
     oReq.open("POST", "https://horum.serveo.net/upload", true);
-    oReq.onload = function (oEvent) {
+    oReq.onload = (oEvent) => {
       console.log(oEvent);
       if (oReq.readyState === oReq.DONE) {
         if (oReq.status === 200) {
             console.log(oReq.response);
+            this.setState({textResult: oReq.response});
+            this.setState({showResult: true});
+            this.setState({extracting: false});
+            
         }
       }
     };
     oReq.send(blob);
     console.log("took photo");
-    this.state.extracting = false;
+    
   }
-  
+
+  showResult(){
+    return (
+      <div className="text-container">
+        <div className="text-result">{this.state.textResult}</div>
+        <div className="exit-result">X</div>
+      </div>
+    );
+  }
+
+
+
   render() {
     return (
       <div className="App">
@@ -97,9 +80,11 @@ class MobileView extends Component {
         />
         <BeatLoader
           sizeUnit={"px"}
-          size={150}
+          size={40}
+          // loading={true}
           loading={this.state.extracting}
         />
+        {this.state.showResult && this.showResult()}
       </div>
     
     );

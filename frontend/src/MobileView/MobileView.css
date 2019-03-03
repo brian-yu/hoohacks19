@@ -1,3 +1,7 @@
+/*
+The take photo button CSS
+*/
+
 #container-circles {
   position: absolute;
   left: 50%;
@@ -49,6 +53,12 @@
   margin: -19px 0px 0px -19px;
 }
 
+
+
+/*
+The video/picture css
+*/
+
 /* fullscreen enable by props */
 video, img {
   width: 100vw;
@@ -63,3 +73,26 @@ video {
   height:100vh;
 }
 
+/*
+The spinner css
+*/
+.css-0{
+  position: absolute;
+  top: 45%;
+  left: 42%;
+}
+
+/*
+The text box css
+*/
+.text-container{
+  position: absolute;
+  display: flex;
+  font-size: 20px;
+  background-color: white;
+  left: 50%;
+  bottom: 120px;
+  padding: 20px;
+  border-radius: 10px;
+  /* height: 35px; */
+}
