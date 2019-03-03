@@ -13,7 +13,7 @@ class Grid extends Component {
     }
 
     componentDidMount = () => {
-        fetch('https://horum.serveo.net/documents')
+        fetch('https://horum.serveo.net/api/documents')
           .then((response) => {
             return response.json();
           })

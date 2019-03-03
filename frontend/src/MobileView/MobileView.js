@@ -40,7 +40,7 @@ class MobileView extends Component {
     let blob = dataURItoBlob(dataUri); // the blob contains the image representation
 
     var oReq = new XMLHttpRequest();
-    oReq.open("POST", "http://localhost:3001/upload", true);
+    oReq.open("POST", "https://nodenotes/api/upload", true);
     oReq.onload = (oEvent) => {
       console.log(oEvent);
       if (oReq.readyState === oReq.DONE) {

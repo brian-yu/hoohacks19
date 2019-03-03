@@ -120,7 +120,7 @@ def hello_whale():
 def camera():
     pass
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/api/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         fid = uuid.uuid4()
@@ -166,15 +166,15 @@ def get_graph():
     # return str(results)
     pass
 
-@app.route("/documents")
+@app.route("/api/documents")
 def documents():
     return get_documents()
 
-@app.route("/search/<query>")
+@app.route("/api/search/<query>")
 def search(query):
     return search_documents(query)
 
-@app.route("/i/documents/new", methods=['POST'])
+@app.route("/api/documents/new", methods=['POST'])
 def add_document():
     content = request.get_json()
     try:
@@ -183,7 +183,7 @@ def add_document():
     except Exception as e:
         return str(e)
 
-@app.route("/flush")
+@app.route("/api/flush")
 def flush_db():
     try:
         query = "MATCH (n) DETACH DELETE n"
@@ -192,7 +192,7 @@ def flush_db():
     except Exception as e:
         return str(e)
 
-@app.route("/load")
+@app.route("/api/load")
 def load_db():
     flush_db()
     try:
