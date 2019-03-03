@@ -19,8 +19,8 @@ project_id = 'hoohacks19-233401'
 vision_client = vision.ImageAnnotatorClient()
 language_client = language.LanguageServiceClient();
 storage_client = storage.Client()
-
-bucket = storage_client.get_bucket('hoohacks-images')
+bucket_id = 'hoohacks-images'
+bucket = storage_client.get_bucket(bucket_id)
 
 def extract_text_from_url(url):
     print(url)
@@ -32,6 +32,7 @@ def extract_text_from_url(url):
         text = annotations[0].description
     else:
         text = ''
+    text = text.encode('utf-8')
     print(text)
     return text
 
@@ -79,7 +80,7 @@ logging.getLogger('flask_cors').level = logging.DEBUG
 
 @app.route('/')
 def hello_whale():
-    return 'Hey guys!'
+    return "Hey guys!"
 
 @app.route('/camera')
 def camera():
@@ -93,11 +94,12 @@ def upload():
         file.write(request.data)
         file.close()
         upload_blob('upload.png', str(fid))
-        url = "http://{}.storage.googleapis.com/{}.png".format(bucket, str(fid))
+        url = "http://{}.storage.googleapis.com/{}.png".format(bucket_id, str(fid))
         print('Photo uploaded to {}.'.format(url))
         text = extract_text_from_url(url)
-        entities = extract_entities_from_text(text)
         print(text)
+        entities = extract_entities_from_text(text)
+        
         return text
     else:
         return 'get'
