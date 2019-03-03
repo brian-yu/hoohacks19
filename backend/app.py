@@ -1,6 +1,6 @@
 from flask import Flask, request
 import requests
-from flask_cors import CORS
+from flask_cors import CORS, logging
 import base64
 import json
 import os
@@ -76,6 +76,7 @@ def upload_blob(source_file_name, destination_blob_name):
 app = Flask(__name__)
 graph = Graph("bolt://db-api:7687", auth=("neo4j","reinform"))
 CORS(app)
+logging.getLogger('flask_cors').level = logging.DEBUG
 
 @app.route('/')
 def hello_whale():
@@ -85,9 +86,16 @@ def hello_whale():
 def camera():
     pass
 
-@app.route('/upload')
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-	return ''
+    if request.method == 'POST':
+        file = open('test.png', 'w')
+        file.write(request.data)
+        file.close()
+        
+        return 'post'
+    else:
+        return 'get'
 
 @app.route('/detect', methods=['POST'])
 def detect():
@@ -106,3 +114,4 @@ def get_graph():
  
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+    
