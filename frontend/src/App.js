@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import Camera, {IMAGE_TYPES} from 'react-html5-camera-photo';
+import Camera, {
+  IMAGE_TYPES,
+  FACING_MODES
+} from 'react-html5-camera-photo';
 
 //import logo from './logo.svg';
 import './App.css';
@@ -80,7 +83,7 @@ class App extends Component {
     data = data.split(",").pop();
 
     var oReq = new XMLHttpRequest();
-    oReq.open("POST", "http://localhost:3001/upload", true);
+    oReq.open("POST", "https://multum.serveo.net/upload", true);
     oReq.onload = function (oEvent) {
       console.log(oEvent);
     };
@@ -120,6 +123,8 @@ class App extends Component {
         <Camera 
           onTakePhoto={ (dataURL) => {this.onTakePhoto(dataURL);} }
           imageType={IMAGE_TYPES.PNG}
+          idealFacingMode={FACING_MODES.ENVIRONMENT}
+          isImageMirror={false}
         />
       </div>
       // <div className="App">
