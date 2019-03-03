@@ -17,7 +17,7 @@ class App extends Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <NavLink to="/" activeClassName="nav-selected">Home</NavLink>
-              <NavLink to="/upload/" activeClassName="nav-selected">Projects</NavLink>
+              <NavLink to="/upload/" activeClassName="nav-selected">Scan</NavLink>
 
               <Nav className="mr-auto">
               </Nav>
