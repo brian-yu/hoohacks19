@@ -1,6 +1,19 @@
+db:
+        image: neo4j
+        container_name: db
+        volumes: 
+                - ./neo4j/data:/data
+                - ./neo4j/logs:/logs
+        ports:
+                - "7474:7474"
+                - "7687:7687"
+        restart: always
+
 backend:
         image: flask
         container_name: backend
+        links:
+                - db:db-api
         volumes: 
                 - ./backend:/app
         ports:
@@ -17,4 +30,3 @@ frontend:
         ports:
                 - "3000:3000"
         restart: always
-        
