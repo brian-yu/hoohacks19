@@ -9,7 +9,6 @@ from google.cloud import storage
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
-from google.protobuf.json_format import MessageToDict
 
 # ================== FUNCTIONS ===========================
 
