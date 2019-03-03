@@ -1,3 +1,3 @@
 # pip install -r requirements.txt
-sleep 10
+sleep 20
 python app.py
