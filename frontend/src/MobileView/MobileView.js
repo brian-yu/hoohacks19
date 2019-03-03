@@ -64,12 +64,11 @@ class MobileView extends Component {
       txt = this.state.textResult;
     }
     else{
-      txt = "Text scanned in! Result: " + this.state.textResult;
+      txt = "Text scanned in! Result: \n" + this.state.textResult;
     }
     return (
       <div className="text-container">
         <div className="text-result" id="snackbar">{txt}</div>
-        {/* <div className="exit-result"><button onClick={() => this.hideResult()}>X</button></div> */}
       </div>
     );
   }
@@ -78,13 +77,8 @@ class MobileView extends Component {
   }
 
   myFunction() {
-    // Get the snackbar DIV
     var x = document.getElementById("snackbar");
-  
-    // Add the "show" class to DIV
     x.className = "show";
-  
-    // After 3 seconds, remove the show class from DIV
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 10000);
   }
 

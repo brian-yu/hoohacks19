@@ -40,3 +40,8 @@
 * {
   font-family: "Circular", sans-serif;
 }
+
+.navbar-collapse > a{
+  padding: 0px 15px 0px 15px;
+  color: rgb(244,244,244);
+}
