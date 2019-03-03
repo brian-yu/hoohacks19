@@ -17,7 +17,8 @@ class App extends Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <NavLink to="/" activeClassName="nav-selected">Home</NavLink>
-              <NavLink to="/upload/" activeClassName="nav-selected">Projects</NavLink>
+              <NavLink to="/upload/" activeClassName="nav-selected">Graph View</NavLink>
+              <NavLink to="/grid/" activeClassName="nav-selected">Grid View</NavLink>
 
               <Nav className="mr-auto">
               </Nav>
@@ -30,6 +31,7 @@ class App extends Component {
           <div className="content">
             <Route path="/" exact component={Graph} />
             <Route path="/upload" component={MobileView} />
+            <Route path="/grid" component={Grid} />
           </div>
         </div>
       </Router>

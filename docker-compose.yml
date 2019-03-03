@@ -25,6 +25,7 @@ frontend:
         container_name: frontend
         links:
                 - backend:backend
+                - db:db
         volumes: 
                 - ./frontend:/app
         ports:
