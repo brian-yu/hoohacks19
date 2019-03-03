@@ -5,6 +5,7 @@ import Grid from './Grid/Grid.js';
 import MobileView from './MobileView/MobileView.js';
 import { Button, Navbar, Nav, Form, FormControl, ButtonToolbar, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
+import edit from "./edit.png";
 
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navbar bg="dark" variant="dark" expand="md">
+            <img className="logo" src={edit} />
             <Navbar.Brand href="/">Note Nodes</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">

@@ -45,3 +45,11 @@
   padding: 0px 15px 0px 15px;
   color: rgb(244,244,244);
 }
+
+.logo {
+  max-width: 32px;
+  max-height: 32px;
+  margin-top: -5px;
+  margin-right: 5px;
+
+}
