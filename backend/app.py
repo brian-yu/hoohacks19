@@ -5,12 +5,13 @@ import base64
 import json
 import os
 import uuid
+import random
 from google.cloud import vision
 from google.cloud import storage
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
-from py2neo import Graph
+from py2neo import Graph, Node, Relationship
 
 # ================== FUNCTIONS ===========================
 
@@ -71,6 +72,23 @@ def upload_blob(source_file_name, fid):
 
     blob.upload_from_filename(source_file_name)
 
+def add_document_helper(content):
+    try:
+        text = content['text']
+        link = content['link']
+        author = content['author']
+        a = Node("Note", text=text, link=link, author=author)
+        for item in content['keywords']:
+            name = item['name']
+            salience = str(item['salience'])
+            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\"})"
+            query += "MERGE (m:Keyword {name:\""+name+"\"})"
+            query += "MERGE (n)-[:CONTAINS {salience:\""+salience+"\"}]->(m)"
+            results = graph.run(query)
+        return "Success"
+    except Exception as e:
+        return str(e)
+
 # ================== FLASK APP + ROUTES ==================
 
 app = Flask(__name__)
@@ -99,7 +117,14 @@ def upload():
         text = extract_text_from_url(url)
         print(text)
         entities = extract_entities_from_text(text)
-        
+        authors = ["Brian Yu", "Rashid Lasker", "Joanna Zhao", "Aaron Gu"]
+        content = {
+            "text": text,
+            "link": url,
+            "author": random.choice(authors),
+            "keywords": entities
+        }
+        add_document_helper(content)
         return text
     else:
         return 'get'
@@ -116,8 +141,58 @@ def entities():
 
 @app.route("/graph")
 def get_graph():
-    results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
-    return str(results)
+    # results = graph.run("MATCH (people:Person) RETURN people.name LIMIT 10").to_table()
+    # return str(results)
+    pass
+
+@app.route("/api/documents/new", methods=['POST'])
+def add_document():
+    content = request.get_json()
+    try:
+        add_document_helper(content)
+        return "Success"
+    except Exception as e:
+        return str(e)
+
+@app.route("/flush")
+def flush_db():
+    try:
+        query = "MATCH (n) DETACH DELETE n"
+        results = graph.run(query)
+        return "Flushed data"
+    except Exception as e:
+        return str(e)
+
+@app.route("/load")
+def load_db():
+    flush_db()
+    try:
+        query = """
+                CREATE (note1:Note {text:'lmfao no u', link:"facebook.com", author:"Brian Yu"})
+                CREATE (note2:Note {text:'lmfao no me', link:"facebook.com", author:"Brian Yu"})
+                CREATE (note3:Note {text:'lmfao no 2', link:"facebook.com", author:"Rashid Lasker"})
+                CREATE (note4:Note {text:'lmfao no 3', link:"facebook.com", author:"Aaron Gu"})
+                CREATE (note5:Note {text:'lmfao no 4', link:"facebook.com", author:"Joanna Zhao"})
+
+                CREATE (no:Keyword {name:"no"})
+                CREATE (u:Keyword {name:"u"})
+                CREATE (me:Keyword {name:"me"})
+
+                CREATE
+                  (note1)-[:CONTAINS {salience:200}]->(no),
+                  (note2)-[:CONTAINS {salience:2040}]->(no),
+                  (note3)-[:CONTAINS {salience:4}]->(me),
+                  (note3)-[:CONTAINS {salience:2}]->(no),
+                  (note4)-[:CONTAINS {salience:2020}]->(no),
+                  (note1)-[:CONTAINS {salience:200}]->(u),
+                  (note5)-[:CONTAINS {salience:200}]->(me),
+                  (note2)-[:CONTAINS {salience:3}]->(u)
+                """
+        results = graph.run(query)
+        return "Loaded data"
+    except Exception as e:
+        return str(e)
+
  
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
