@@ -1,3 +1,5 @@
+
+import './Graph.css';
 import React, { Component } from 'react';
 const NeoVis = require('neovis.js');
 
@@ -12,20 +14,20 @@ class Graph extends Component {
         server_user: "neo4j",
         server_password: "reinform",
         labels: { //labels: Keyword and Note
-            "Note": {
+            "Keyword": {
                 "caption": "name",
                 "size": "pagerank",
                 "community": "community"
             }
         },
         relationships: {
-        "CONTAINS": {
-            "thickness": "weight",
-            "caption": false
-        }
+          "CONTAINS": {
+              "thickness": "salience",
+              "caption": false
+          }
         },
-        initial_cypher: "MATCH (n) RETURN *"
-        // initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
+        // initial_cypher: "MATCH (n) RETURN *"
+        initial_cypher: "MATCH (n)-[r:CONTAINS]->(m) RETURN *"
     };
 
     viz = new NeoVis.default(config);

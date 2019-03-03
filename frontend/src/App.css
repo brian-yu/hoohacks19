@@ -38,7 +38,7 @@
 }
 
 * {
-  font-family: "Circular", sans-serif;
+  font-family: "Circular", sans-serif !important;
 }
 
 .navbar-collapse > a{
