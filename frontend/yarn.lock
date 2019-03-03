@@ -6387,6 +6387,11 @@ neo4jd3@0.0.5:
   dependencies:
     d3 "^4.2.1"
 
+neovis.js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/neovis.js/-/neovis.js-1.0.0.tgz#3b4a1178106cc6c2a8a56b8e6e5ec9a006aa88bf"
+  integrity sha512-r2mvcYqcbLT9kTP9fFf2qVXiQEbb7VuzNvOam3rwk+JvU0IQ0qAjULUGPotPZpqW+ccpaxw2cSTUsBS8IROauQ==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

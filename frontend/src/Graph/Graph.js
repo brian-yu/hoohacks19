@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NeoVis from 'neovis.js';
+const NeoVis = require('neovis.js');
 
 
 class Graph extends Component {
@@ -8,18 +8,18 @@ class Graph extends Component {
     var viz;
     var config = {
         container_id: "viz",
-        server_url: "localhost:7474",
+        server_url: "bolt://localhost:7687",
         server_user: "neo4j",
         server_password: "reinform",
         labels: { //labels: Keyword and Note
-            "Character": {
+            "Note": {
                 "caption": "name",
                 "size": "pagerank",
                 "community": "community"
             }
         },
         relationships: {
-        "INTERACTS": {
+        "CONTAINS": {
             "thickness": "weight",
             "caption": false
         }
@@ -33,13 +33,6 @@ class Graph extends Component {
   }
 
   componentDidMount(){
-      
-      const script = document.createElement("script");
-      script.src = "https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"
-      script.async = true;
-
-      document.body.appendChild(script);
-
       this.draw();
   }
 
