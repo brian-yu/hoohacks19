@@ -6,6 +6,7 @@ import json
 import os
 import uuid
 import random
+import time
 from google.cloud import vision
 from google.cloud import storage
 from google.cloud import language
@@ -84,11 +85,12 @@ def add_document_helper(content):
         text = content['text']
         link = content['link']
         author = content['author']
+        timestamp = str(content['timestamp'])
         a = Node("Note", text=text, link=link, author=author)
         for item in content['keywords']:
             name = item['name']
             salience = str(item['salience'])
-            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\"})"
+            query = "MERGE (n:Note {text:\""+text+"\", link: \""+link+"\", author:\""+author+"\", timestamp: \""+timestamp+"\"})"
             query += "MERGE (m:Keyword {name:\""+name+"\"})"
             query += "MERGE (n)-[:CONTAINS {salience:\""+salience+"\"}]->(m)"
             results = graph.run(query)
@@ -142,7 +144,8 @@ def upload():
             "text": text,
             "link": url,
             "author": random.choice(authors),
-            "keywords": json.loads(entities)
+            "keywords": json.loads(entities),
+            "timestamp": time.time()
         }
         add_document_helper(content)
         return text
