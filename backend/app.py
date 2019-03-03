@@ -150,6 +150,7 @@ def flush_db():
 
 @app.route("/load")
 def load_db():
+    flush_db()
     try:
         query = """
                 CREATE (note1:Note {text:'lmfao no u', link:"facebook.com", author:"Brian Yu"})
