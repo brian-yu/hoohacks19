@@ -4,6 +4,7 @@ from flask_cors import CORS, logging
 import base64
 import json
 import os
+import uuid
 from google.cloud import vision
 from google.cloud import storage
 from google.cloud import language
@@ -17,6 +18,9 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './hoohacks19-9661c4101e40.json'
 project_id = 'hoohacks19-233401'
 vision_client = vision.ImageAnnotatorClient()
 language_client = language.LanguageServiceClient();
+storage_client = storage.Client()
+
+bucket = storage_client.get_bucket('hoohacks-images')
 
 def extract_text_from_url(url):
     print(url)
@@ -57,11 +61,14 @@ def extract_entities_from_text(text):
 
     return json.dumps(entList)
 
-    # example_text = 'Python is such a great programming language'
-    # sentiment, entities = language_analysis(example_text)
-    # print(sentiment.score, sentiment.magnitude)
-    # for e in entities:
-    #     print(e.name, e.entity_type, e.metadata, e.salience)
+def upload_blob(source_file_name, fid):
+    """Uploads a file to the bucket."""
+
+    dest = "{}.png".format(fid)
+    
+    blob = bucket.blob(dest)
+
+    blob.upload_from_filename(source_file_name)
 
 # ================== FLASK APP + ROUTES ==================
 
@@ -81,11 +88,17 @@ def camera():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-        file = open('test.png', 'w')
+        fid = uuid.uuid4()
+        file = open('upload.png', 'w')
         file.write(request.data)
         file.close()
-        
-        return 'post'
+        upload_blob('upload.png', str(fid))
+        url = "http://{}.storage.googleapis.com/{}.png".format(bucket, str(fid))
+        print('Photo uploaded to {}.'.format(url))
+        text = extract_text_from_url(url)
+        entities = extract_entities_from_text(text)
+        print(text)
+        return text
     else:
         return 'get'
 
