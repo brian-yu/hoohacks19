@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-
-
-
-
+import NeoVis from 'neoviz.js';
 
 
 class Graph extends Component {
 
+
+
   draw() {
+    var viz;
     var config = {
         container_id: "viz",
         server_url: "localhost:7474",
@@ -34,10 +34,20 @@ class Graph extends Component {
     viz.render();
   }
 
+  componentDidMount(){
+      
+      const script = document.createElement("script");
+      script.src = "https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"
+      script.async = true;
+
+      document.body.appendChild(script);
+
+      this.draw();
+  }
+
   render() {
     return (
-      <div className="Graph">
-        Hello World
+      <div className="Graph" id="viz"> 
       </div>
     );
   }
