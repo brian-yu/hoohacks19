@@ -5,8 +5,17 @@ const NeoVis = require('neovis.js');
 
 
 class Graph extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   draw() {
+    var init = "";
+    if (this.props.query !== ""){
+      init = "MATCH (n)-[r:CONTAINS]->(m) WHERE m.name STARTS WITH '" + this.props.query + "' OR n.text CONTAINS '" + this.props.query + "' OR n.author CONTAINS '" + this.props.query + "' RETURN *";
+    } else {
+      init = "MATCH (n)-[r:CONTAINS]->(m) RETURN *";
+    }
     var viz;
     var config = {
         container_id: "viz",
@@ -27,7 +36,7 @@ class Graph extends Component {
           }
         },
         // initial_cypher: "MATCH (n) RETURN *"
-        initial_cypher: "MATCH (n)-[r:CONTAINS]->(m) RETURN *"
+        initial_cypher: init
     };
 
     viz = new NeoVis.default(config);
@@ -35,6 +44,10 @@ class Graph extends Component {
   }
 
   componentDidMount(){
+      this.draw();
+  }
+  componentWillReceiveProps(nextProps) {
+      this.props = nextProps;
       this.draw();
   }
 
