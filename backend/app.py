@@ -23,6 +23,8 @@ storage_client = storage.Client()
 bucket_id = 'hoohacks-images'
 bucket = storage_client.get_bucket(bucket_id)
 
+graph = Graph("bolt://db-api:7687", auth=("neo4j","reinform"))
+
 def extract_text_from_url(url):
     print(url)
     text_detection_response = vision_client.document_text_detection({
@@ -43,25 +45,29 @@ def extract_entities_from_text(text):
     #dir(sent_analysis)
     #sentiment = sent_analysis.sentiment
 
-    document = types.Document(
-        content=text,
-        type=enums.Document.Type.PLAIN_TEXT)
-    entities = language_client.analyze_entities(document).entities
+    try:
 
-    entList = []
-    for e in entities:
-        d = {}
-        d['name']=e.name
-        l = ['Unknown','Person','Location','Organization','Event','Work of art','Consumer goods','Other']        
-        d['type']=l[e.type]
-        #d['metadata']=MessageToDict(e.metadata)
-        d['wikipedia_url']=e.metadata.get('wikipedia_url', '-')
-        d['mid']=e.metadata.get('mid', '-')
-        d['salience']=e.salience
-        entList.append(d)
+        document = types.Document(
+            content=text,
+            type=enums.Document.Type.PLAIN_TEXT)
+        entities = language_client.analyze_entities(document).entities
+
+        entList = []
+        for e in entities:
+            d = {}
+            d['name']=e.name
+            l = ['Unknown','Person','Location','Organization','Event','Work of art','Consumer goods','Other']        
+            d['type']=l[e.type]
+            #d['metadata']=MessageToDict(e.metadata)
+            d['wikipedia_url']=e.metadata.get('wikipedia_url', '-')
+            d['mid']=e.metadata.get('mid', '-')
+            d['salience']=e.salience
+            entList.append(d)
 
 
-    return json.dumps(entList)
+        return json.dumps(entList)
+    except:
+        return False
 
 def upload_blob(source_file_name, fid):
     """Uploads a file to the bucket."""
@@ -92,7 +98,6 @@ def add_document_helper(content):
 # ================== FLASK APP + ROUTES ==================
 
 app = Flask(__name__)
-graph = Graph("bolt://db-api:7687", auth=("neo4j","reinform"))
 CORS(app)
 logging.getLogger('flask_cors').level = logging.DEBUG
 
@@ -115,14 +120,18 @@ def upload():
         url = "http://{}.storage.googleapis.com/{}.png".format(bucket_id, str(fid))
         print('Photo uploaded to {}.'.format(url))
         text = extract_text_from_url(url)
+        if len(text.strip()) == 0:
+            return "No text detected"
         print(text)
         entities = extract_entities_from_text(text)
+        if not entities:
+            return 'No entities detected.'
         authors = ["Brian Yu", "Rashid Lasker", "Joanna Zhao", "Aaron Gu"]
         content = {
             "text": text,
             "link": url,
             "author": random.choice(authors),
-            "keywords": entities
+            "keywords": json.loads(entities)
         }
         add_document_helper(content)
         return text
@@ -137,7 +146,8 @@ def detect():
 @app.route('/entities', methods=['POST'])
 def entities():
     text = request.form['text']
-    return extract_entities_from_text(text)
+    entities = extract_entities_from_text(text)
+    return entities
 
 @app.route("/graph")
 def get_graph():
@@ -145,7 +155,7 @@ def get_graph():
     # return str(results)
     pass
 
-@app.route("/api/documents/new", methods=['POST'])
+@app.route("/i/documents/new", methods=['POST'])
 def add_document():
     content = request.get_json()
     try:
