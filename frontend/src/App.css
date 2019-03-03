@@ -31,3 +31,12 @@
     transform: rotate(360deg);
   }
 } */
+
+@font-face {
+  font-family: "Circular";
+  src: url("./fonts/circular-book.otf") format("opentype");
+}
+
+* {
+  font-family: "Circular", sans-serif;
+}
