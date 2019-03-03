@@ -99,7 +99,7 @@ def add_document_helper(content):
         return str(e)
 
 def get_documents():
-    return json.dumps(list(matcher.match("Note").limit(20)))
+    return json.dumps(list(matcher.match("Note").limit(50)))
 
 def search_documents(query):
     query.lower()
