@@ -49,7 +49,7 @@ class MobileView extends Component {
             this.setState({textResult: oReq.response});
             this.setState({showResult: true});
             this.setState({extracting: false});
-            
+            this.myFunction();
         }
       }
     };
@@ -59,15 +59,33 @@ class MobileView extends Component {
   }
 
   showResult(){
+    var txt;
+    if(this.state.textResult === "No text detected"){
+      txt = this.state.textResult;
+    }
+    else{
+      txt = "Text scanned in! Result: " + this.state.textResult;
+    }
     return (
       <div className="text-container">
-        <div className="text-result">{this.state.textResult}</div>
-        <div className="exit-result"><button onClick={() => this.hideResult()}>X</button></div>
+        <div className="text-result" id="snackbar">{txt}</div>
+        {/* <div className="exit-result"><button onClick={() => this.hideResult()}>X</button></div> */}
       </div>
     );
   }
   hideResult(){
     this.setState({showResult: false, textResult: ""});
+  }
+
+  myFunction() {
+    // Get the snackbar DIV
+    var x = document.getElementById("snackbar");
+  
+    // Add the "show" class to DIV
+    x.className = "show";
+  
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 10000);
   }
 
 
