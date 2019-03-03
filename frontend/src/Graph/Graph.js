@@ -19,7 +19,7 @@ class Graph extends Component {
     var viz;
     var config = {
         container_id: "viz",
-        server_url: "bolt://localhost:7687",
+        server_url: "bolt://notenodes.net:7687",
         server_user: "neo4j",
         server_password: "reinform",
         labels: { //labels: Keyword and Note
