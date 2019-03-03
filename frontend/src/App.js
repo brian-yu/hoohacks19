@@ -8,6 +8,20 @@ import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom"
 
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialState: "Search...",
+      query: ""
+    }
+  }
+
+  handleChange(event) {
+    this.setState({
+        query: event.target.value
+      });
+    console.log(event.target.value);
+  }
   
   render() {
     return (
@@ -24,15 +38,15 @@ class App extends Component {
               <Nav className="mr-auto">
               </Nav>
               <Form inline>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                <Button variant="outline-success">Search</Button>
+                <FormControl type="text" placeholder={this.state.initialState} onChange={this.handleChange.bind(this)} className="mr-sm-2" />
+                <Button variant="outline-success" onClick={this.handleChange.bind(this)}>Search</Button>
               </Form>
             </Navbar.Collapse>
           </Navbar>
           <div className="content">
-            <Route path="/" exact component={Graph} />
-            <Route path="/upload" component={MobileView} />
-            <Route path="/grid" component={Grid} />
+            <Route path="/" exact render={(props) => <Graph query={this.state.query}/>}/>
+            <Route path="/upload" render={(props) => <MobileView query={this.state.query}/>} />
+            <Route path="/grid" render={(props) => <Grid query={this.state.query}/>} />
           </div>
         </div>
       </Router>
