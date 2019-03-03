@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NeoVis from 'neoviz.js';
+import NeoVis from 'neovis.js';
 
 
 class Graph extends Component {
@@ -11,7 +11,7 @@ class Graph extends Component {
         server_url: "localhost:7474",
         server_user: "neo4j",
         server_password: "reinform",
-        labels: {
+        labels: { //labels: Keyword and Note
             "Character": {
                 "caption": "name",
                 "size": "pagerank",
@@ -28,8 +28,8 @@ class Graph extends Component {
         // initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
     };
 
-    // viz = new NeoVis.default(config);
-    // viz.render();
+    viz = new NeoVis.default(config);
+    viz.render();
   }
 
   componentDidMount(){
