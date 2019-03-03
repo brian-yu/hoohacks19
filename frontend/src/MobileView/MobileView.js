@@ -62,11 +62,13 @@ class MobileView extends Component {
     return (
       <div className="text-container">
         <div className="text-result">{this.state.textResult}</div>
-        <div className="exit-result">X</div>
+        <div className="exit-result"><button onClick={() => this.hideResult()}>X</button></div>
       </div>
     );
   }
-
+  hideResult(){
+    this.setState({showResult: false, textResult: ""});
+  }
 
 
   render() {
@@ -81,7 +83,6 @@ class MobileView extends Component {
         <BeatLoader
           sizeUnit={"px"}
           size={40}
-          // loading={true}
           loading={this.state.extracting}
         />
         {this.state.showResult && this.showResult()}

@@ -96,3 +96,7 @@ The text box css
   border-radius: 10px;
   /* height: 35px; */
 }
+.text-result{
+  margin-right: 10px;
+  border-right: 1ch;
+}
