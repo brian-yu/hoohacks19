@@ -32,7 +32,7 @@ class Graph extends Component {
     viz.render();
   }
 
-  componentDidMount(){
+  componentDidMount = () => {
       
       const script = document.createElement("script");
       script.src = "https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"
