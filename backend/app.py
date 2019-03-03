@@ -17,6 +17,9 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './hoohacks19-9661c4101e40.json'
 project_id = 'hoohacks19-233401'
 vision_client = vision.ImageAnnotatorClient()
 language_client = language.LanguageServiceClient();
+storage_client = storage.Client()
+
+bucket = storage_client.get_bucket('hoohacks19-images')
 
 def extract_text_from_url(url):
     print(url)
@@ -57,11 +60,16 @@ def extract_entities_from_text(text):
 
     return json.dumps(entList)
 
-    # example_text = 'Python is such a great programming language'
-    # sentiment, entities = language_analysis(example_text)
-    # print(sentiment.score, sentiment.magnitude)
-    # for e in entities:
-    #     print(e.name, e.entity_type, e.metadata, e.salience)
+def upload_blob(source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print('File {} uploaded to {}.'.format(
+        source_file_name,
+        destination_blob_name))
 
 # ================== FLASK APP + ROUTES ==================
 
